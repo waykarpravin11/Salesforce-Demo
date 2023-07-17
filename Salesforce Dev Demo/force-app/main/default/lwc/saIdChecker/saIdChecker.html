@@ -1,0 +1,93 @@
+<!--
+ * @description       : This lightning component validate the SA ID and extract the Date of Birth, Gender and Cizenship of the 
+ *                      user. This information is stored in salesforce against the number of times this ID Number is searched. 
+ *                      It also fetch the holidays in the birth year of the user using API call. 
+ * @author            : Pravin Waykar
+ * @group             : 
+ * @last modified on  : 2023-07-16
+ * @last modified by  : Pravin Waykar
+-->
+
+<template>
+  <div class="slds-p-around_large slds-m-bottom_small" style="border-bottom: 1px solid #d2d2d2;">
+    <div class="slds-grid slds-grid_align-spread">
+      <div class="slds-col">
+        <span>
+          <img style="max-width:290px;" src={header_img} />
+        </span>
+      </div>
+      <div class="slds-col">
+        <span>
+          <h2>South African Id Checker Tool</h2>
+        </span>
+      </div>
+    </div>
+  </div>
+
+ 
+  <div class="slds-grid slds-gutters slds-box" style="font-size: initial;">
+    <div class="slds-col slds-size_6-of-12 slds-large-size_6-of-12">
+      <div class="slds-box">
+      <p>In this tool user can check if their is holiday on the user's birth date.
+       </p>
+       <br/>
+       <p class="slds-text-heading_medium"> How it works?</p>
+      <ul class="slds-list_dotted">
+        <li>
+          Please enter you valid South african Id in the text box. 
+              <ul class="slds-list_dotted">
+                  <li>A South African ID number is a 13-digit number which is defined by the following format: YYMMDDSSSSCAZ.</li>
+                  <li>The first 6 digits (YYMMDD) are based on your date of birth. 20 February 1992 is displayed as 920220.</li>
+                  <li>The next 4 digits (SSSS) are used to define your gender.  Females are assigned numbers in the range 0000-4999 and males from 5000-9999.</li>
+                  <li>The next digit (C) shows if you're an SA citizen status with 0 denoting that you were born a SA citizen and 1 denoting that you're a permanent resident.</li>
+                  <li>The last digit (Z) is a checksum digit – used to check that the number sequence is accurate using a set formula called the Luhn algorithm.</li>
+              </ul>
+        </li>
+        <li>
+          Click on search button.
+        </li>
+        <li>Tool parse the Date of Birth from your valid ID Number and Check if there is holiday on your birthday.</li>
+      </ul>
+    </div>
+    </div>
+  
+    <!-- spinner to show processing indicator-->
+    <div class="slds-col slds-size_6-of-12 slds-large-size_6-of-12">
+      <div class="slds-box">
+      <div if:true={isLoading}>
+        <lightning-spinner variant="base" size="medium"></lightning-spinner>
+      </div>
+      <div class="slds-p-horizontal_large slds-m-top_medium">
+        <div class="slds-form-element">
+          <label class="slds-form-element__label" for="sample1"></label>
+          <div class="slds-form-element__control">
+            <input style="width:70%" id="saIDInput" class="slds-input" type="number" onkeyup={onSAIDChange}
+              placeholder="Enter South African ID" />
+            <lightning-button style="position: absolute;margin-left:3%;" disabled={isDisabled} label="Search"
+              title="Search" variant="brand" onclick={searchSAId}></lightning-button>
+            <template lwc:if={isError}><br /><span style="color:red;">{strErrorMsg}</span></template>
+          </div>
+        </div>
+      </div>
+      <hr />
+      <template if:true={showHeaderTitle}>
+        <p class="slds-text-heading_medium">Below are the holidays in your birth year!</p>
+       </template>
+        <hr/>
+      <!--show list of holidays for the birth year-->
+      <div id="" style="overflow:scroll; height:800px;">
+        <template if:true={lstHolidays}>
+          <template for:each={lstHolidays} for:item="holiday" for:index="index">
+            <lightning-card key={holiday.holidaydate} title={holiday.holidayName} icon-name={holiday.iconName}>
+              <div class="slds-m-around_medium">
+                <p class="slds-text-heading_medium">{holiday.holidayDate}</p>
+                <p class="">{holiday.holidayDescription}</p>
+              </div>
+            </lightning-card>
+          </template>
+        </template>
+      </div>
+    </div>
+  </div>
+  </div>
+</template>

@@ -1,0 +1,33 @@
+<!--
+  @description       : 
+  @author            : Pravin Waykar
+  @group             : 
+  @last modified on  : 2023-07-16
+  @last modified by  : Pravin Waykar
+-->
+<apex:page setup="false" cache="false" showHeader="false"  sidebar="false" lightningStylesheets="true" title="SA Holiday Checker">
+ <apex:includeLightning />
+    
+    <apex:outputPanel layout="block">            
+             <div id="LoadingvfDIV" class="slds-spinner_container" style="display:block;">
+                    <div class="slds-spinner slds-spinner--large" aria-hidden="false" role="alert">
+                        <div class="slds-spinner__dot-a"></div>
+                        <div class="slds-spinner__dot-b"></div>
+                    </div>
+                </div>             
+             <div id="lightning" /> 
+        </apex:outputPanel>
+        <script>
+        $Lightning.use("c:SAIDProcessing", function() {
+          $Lightning.createComponent("c:saIdChecker",{},
+              "lightning",
+              function(cmp) {
+              let loadingDivElt = document.getElementById("LoadingvfDIV");
+                                               loadingDivElt.style.display = 'none' ;
+              }
+          );
+        });
+    </script> 
+    
+   
+</apex:page>
